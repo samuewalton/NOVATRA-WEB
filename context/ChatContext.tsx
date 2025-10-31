@@ -6,8 +6,12 @@ import { useProducts } from './ProductContext.tsx';
 import { useCart } from './CartContext.tsx';
 import { useLocalization } from './LocalizationContext.tsx';
 
-if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable not set");
+// Check if API key is configured
+const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+if (!apiKey) {
+    console.error("❌ Gemini API key not configured for Chat!");
+    console.error("Please create a .env.local file and add: GEMINI_API_KEY=your_key_here");
+    console.error("Chat assistant will not function without an API key.");
 }
 
 const functionDeclarations: FunctionDeclaration[] = [
@@ -77,7 +81,10 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const getChat = useCallback(() => {
         if (!chatRef.current) {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+            if (!apiKey) {
+                throw new Error("Gemini API key not configured. Please check your .env.local file.");
+            }
+            const ai = new GoogleGenAI({ apiKey });
             chatRef.current = ai.chats.create({
                 model: 'gemini-2.5-pro',
                 config: {
@@ -224,7 +231,26 @@ Always be warm, professional, and helpful. Focus on safety and quality.`,
 
         } catch (error) {
             console.error("Gemini API error:", error);
-            const errorMessage: ChatMessage = { id: (Date.now() + 1).toString(), role: 'model', text: "I'm sorry, I encountered an error. Please try again." };
+            let errorText = "I'm sorry, I encountered an error. Please try again.";
+
+            if (error instanceof Error) {
+                console.error("Error details:", error.message);
+
+                // Provide more helpful error messages
+                if (error.message.includes("API key")) {
+                    errorText = "Configuration error: API key is not set up correctly. Please contact support.";
+                } else if (error.message.includes("quota") || error.message.includes("429")) {
+                    errorText = "I'm experiencing high demand right now. Please try again in a moment.";
+                } else if (error.message.includes("network") || error.message.includes("fetch")) {
+                    errorText = "Network connection issue. Please check your internet and try again.";
+                }
+            }
+
+            const errorMessage: ChatMessage = {
+                id: (Date.now() + 1).toString(),
+                role: 'model',
+                text: errorText
+            };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);

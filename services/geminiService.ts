@@ -2,12 +2,27 @@
 import { GoogleGenAI, Chat, Modality, GenerateContentResponse, Type } from "@google/genai";
 import type { Review } from '../types.ts';
 
-if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable not set");
+// Check if API key is configured
+if (!process.env.API_KEY && !process.env.GEMINI_API_KEY) {
+    console.error("❌ Gemini API key not configured!");
+    console.error("Please create a .env.local file and add: GEMINI_API_KEY=your_key_here");
+    console.error("Get your API key from: https://ai.google.dev/gemini-api/docs/api-key");
 }
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || "";
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export async function generateSpeechFromText(text: string): Promise<string> {
+    if (!ai) {
+        console.error("Gemini AI not initialized. Check your API key configuration.");
+        return "";
+    }
+
+    if (!text || text.trim().length === 0) {
+        console.error("Cannot generate speech from empty text");
+        return "";
+    }
+
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash-preview-tts",
@@ -29,6 +44,9 @@ export async function generateSpeechFromText(text: string): Promise<string> {
         return base64Audio;
     } catch (error) {
         console.error("Gemini TTS API error:", error);
+        if (error instanceof Error) {
+            console.error("Error details:", error.message);
+        }
         return "";
     }
 }
@@ -41,6 +59,18 @@ export async function generateRoomPreview(
     productDimensions: string,
     colorName: string
 ): Promise<string> {
+    if (!ai) {
+        throw new Error("Gemini AI not initialized. Check your API key configuration.");
+    }
+
+    if (!roomImageBase64 || roomImageBase64.trim().length === 0) {
+        throw new Error("Room image is required for preview generation.");
+    }
+
+    if (!productName || !prompt) {
+        throw new Error("Product name and prompt are required.");
+    }
+
     try {
         const fullPrompt = `
             You are an expert interior design assistant for NOVATRA.
@@ -88,12 +118,21 @@ export async function generateRoomPreview(
 
     } catch (error) {
         console.error("Gemini Image Editing API error:", error);
-        throw new Error("Failed to generate room preview.");
+        if (error instanceof Error) {
+            console.error("Error details:", error.message);
+            throw new Error(`Failed to generate room preview: ${error.message}`);
+        }
+        throw new Error("Failed to generate room preview. Please try again.");
     }
 }
 
 export async function summarizeReviews(reviews: Review[]): Promise<{ pros: string[]; cons: string[] }> {
-    if (reviews.length === 0) {
+    if (!ai) {
+        console.error("Gemini AI not initialized. Check your API key configuration.");
+        return { pros: [], cons: [] };
+    }
+
+    if (!reviews || reviews.length === 0) {
         return { pros: [], cons: [] };
     }
 
@@ -136,6 +175,10 @@ Please provide the output as a JSON object with two keys: "pros" and "cons". Eac
         return summary;
     } catch (error) {
         console.error("Gemini Review Summary API error:", error);
-        throw new Error("Failed to summarize reviews.");
+        if (error instanceof Error) {
+            console.error("Error details:", error.message);
+            throw new Error(`Failed to summarize reviews: ${error.message}`);
+        }
+        throw new Error("Failed to summarize reviews. Please try again.");
     }
 }
