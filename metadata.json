@@ -1,0 +1,8 @@
+{
+  "name": "NOVATRA eCommerce",
+  "description": "A modern, responsive eCommerce platform for NOVATRA, the official Israeli importer of Veres baby furniture. The platform features a product catalog, detailed product pages, and a Gemini-powered chat assistant.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
