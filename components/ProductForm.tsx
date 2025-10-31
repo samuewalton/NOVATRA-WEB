@@ -67,7 +67,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productId }) => {
     const { navigateTo } = useRouter();
     const { getProductById, addProduct, updateProduct } = useProducts();
     const { addNotification } = useNotification();
-    const [product, setProduct] = useState<Omit<Product, 'averageRating' | 'reviewCount'>>(emptyProduct);
+    const [product, setProduct] = useState<Omit<Product, 'id' | 'averageRating' | 'reviewCount'> & { id?: string }>(emptyProduct);
     const isEditing = productId !== 'new';
     
     useEffect(() => {

@@ -202,21 +202,21 @@ Always be warm, professional, and helpful. Focus on safety and quality.`,
             let response = await chat.sendMessage({ message: text });
 
             while (response.functionCalls && response.functionCalls.length > 0) {
-                const toolResponses = [];
+                const functionResponses = [];
                 for (const fc of response.functionCalls) {
                     const { name, args } = fc;
                     if (toolFunctions[name as keyof typeof toolFunctions]) {
                         // @ts-ignore
                         const result = toolFunctions[name](args);
-                        toolResponses.push({
+                        functionResponses.push({
                             id: fc.id,
                             name: fc.name,
                             response: { result }
                         });
                     }
                 }
-                
-                response = await chat.sendMessage({ toolResponses });
+
+                response = await chat.sendMessage({ functionResponses });
             }
 
             const modelResponse: ChatMessage = { id: (Date.now() + 1).toString(), role: 'model', text: response.text };
