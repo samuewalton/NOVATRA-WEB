@@ -1,0 +1,21 @@
+{
+  "name": "NOVATRA - ריהוט תינוקות ויל דים",
+  "short_name": "NOVATRA",
+  "description": "ריהוט תינוקות איכותי ומעוצב מבית Veres. היבואן הרשמי בישראל.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F5F3",
+  "theme_color": "#2C5F5D",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "he",
+  "dir": "rtl",
+  "categories": ["shopping", "lifestyle"]
+}

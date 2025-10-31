@@ -1,0 +1,11 @@
+# robots.txt for NOVATRA eCommerce
+
+User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /admin
+Disallow: /*?*checkout*
+
+# Sitemap
+Sitemap: https://novatra-web.vercel.app/sitemap.xml
