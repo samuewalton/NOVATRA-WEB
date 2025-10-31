@@ -5,7 +5,8 @@ import { useNotification } from '../context/NotificationContext.tsx';
 import type { Product, LocalizedString, Price } from '../types.ts';
 import { Language } from '../types.ts';
 
-const emptyProduct: Omit<Product, 'id' | 'averageRating' | 'reviewCount'> = {
+const emptyProduct: Omit<Product, 'id' | 'averageRating' | 'reviewCount'> & { id?: string } = {
+    id: undefined,
     sku: '',
     name: { he: '', en: '', ru: '' },
     subtitle: { he: '', en: '', ru: '' },
