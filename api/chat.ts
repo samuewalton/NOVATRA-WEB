@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type, FunctionDeclaration } from '@google/genai';
 import { createClient } from '@supabase/supabase-js';
 
 const geminiApiKey = process.env.GEMINI_API_KEY!;
@@ -10,17 +10,17 @@ const ai = new GoogleGenAI({ apiKey: geminiApiKey });
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Function declarations for Gemini
-const functionDeclarations = [
+const functionDeclarations: FunctionDeclaration[] = [
   {
     name: "searchProducts",
     description: "Search for products by category, price range, or keywords",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
-        category: { type: "STRING" as const, description: "Optional. Product category" },
-        minPrice: { type: "NUMBER" as const, description: "Optional. Minimum price" },
-        maxPrice: { type: "NUMBER" as const, description: "Optional. Maximum price" },
-        keywords: { type: "STRING" as const, description: "Optional. Search keywords" }
+        category: { type: Type.STRING, description: "Optional. Product category" },
+        minPrice: { type: Type.NUMBER, description: "Optional. Minimum price" },
+        maxPrice: { type: Type.NUMBER, description: "Optional. Maximum price" },
+        keywords: { type: Type.STRING, description: "Optional. Search keywords" }
       }
     }
   },
@@ -28,9 +28,9 @@ const functionDeclarations = [
     name: "getProductDetails",
     description: "Get full details of a specific product",
     parameters: {
-      type: "OBJECT" as const,
+      type: Type.OBJECT,
       properties: {
-        productId: { type: "STRING" as const, description: "Product ID or SKU" }
+        productId: { type: Type.STRING, description: "Product ID or SKU" }
       },
       required: ["productId"]
     }
@@ -140,8 +140,7 @@ Always be warm, professional, and helpful. Focus on safety and quality.`,
     }
 
     return res.status(200).json({
-      text: response.text,
-      history: chat.history
+      text: response.text
     });
 
   } catch (error: any) {
