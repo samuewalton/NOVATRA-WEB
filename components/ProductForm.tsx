@@ -5,7 +5,8 @@ import { useNotification } from '../context/NotificationContext.tsx';
 import type { Product, LocalizedString, Price } from '../types.ts';
 import { Language } from '../types.ts';
 
-const emptyProduct: Omit<Product, 'id' | 'averageRating' | 'reviewCount'> = {
+const emptyProduct: Omit<Product, 'averageRating' | 'reviewCount'> = {
+    id: '',
     sku: '',
     name: { he: '', en: '', ru: '' },
     subtitle: { he: '', en: '', ru: '' },
@@ -39,7 +40,7 @@ const Tab: React.FC<{ active: boolean; onClick: () => void; children: React.Reac
 );
 
 
-const LocalizedInput: React.FC<{ label: string; field: keyof Omit<Product, 'price' | 'colors' | 'accessories' | 'images' | 'inStock' | 'id'>; value: LocalizedString; onChange: (field: any, lang: Language, text: string) => void; isTextarea?: boolean; }> = ({ label, field, value, onChange, isTextarea }) => {
+const LocalizedInput: React.FC<{ label: string; field: keyof Omit<Product, 'price' | 'colors' | 'accessories' | 'images' | 'inStock' | 'id' | 'averageRating' | 'reviewCount'>; value: LocalizedString; onChange: (field: any, lang: Language, text: string) => void; isTextarea?: boolean; }> = ({ label, field, value, onChange, isTextarea }) => {
     const [activeLang, setActiveLang] = useState(Language.HE);
     
     return (
@@ -81,8 +82,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ productId }) => {
         }
     }, [isEditing, productId, getProductById]);
 
-    const handleLocalizedChange = (field: keyof Omit<Product, 'price' | 'colors' | 'accessories' | 'images' | 'inStock' | 'id'>, lang: Language, text: string) => {
-        setProduct(prev => ({ ...prev, [field]: { ...prev[field], [lang]: text } }));
+    const handleLocalizedChange = (field: keyof Omit<Product, 'price' | 'colors' | 'accessories' | 'images' | 'inStock' | 'id' | 'averageRating' | 'reviewCount'>, lang: Language, text: string) => {
+        setProduct(prev => ({ ...prev, [field]: { ...(prev[field] as LocalizedString), [lang]: text } }));
     };
 
     const handlePriceChange = (currency: keyof Price, value: string) => {

@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom font styles based on language */
+:lang(he) h1, :lang(he) h2, :lang(he) h3, :lang(he) h4, :lang(he) h5, :lang(he) h6 {
+  font-family: 'Heebo', sans-serif;
+}
+
+:lang(he) body, :lang(he) p, :lang(he) span, :lang(he) div {
+  font-family: 'Assistant', sans-serif;
+}
+
+:lang(en) h1, :lang(en) h2, :lang(en) h3, :lang(en) h4, :lang(en) h5, :lang(en) h6,
+:lang(ru) h1, :lang(ru) h2, :lang(ru) h3, :lang(ru) h4, :lang(ru) h5, :lang(ru) h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+:lang(en) body, :lang(en) p, :lang(en) span, :lang(en) div,
+:lang(ru) body, :lang(ru) p, :lang(ru) span, :lang(ru) div {
+  font-family: 'Inter', sans-serif;
+}
