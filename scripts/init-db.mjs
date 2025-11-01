@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS products (
   colors JSONB[],
   price JSONB NOT NULL,
   accessories JSONB[],
-  similar_product_ids UUID[],
-  in_stock BOOLEAN DEFAULT true,
+  similarProductIds UUID[],
+  inStock BOOLEAN DEFAULT true,
   stock INTEGER DEFAULT 0,
   features JSONB[],
   safety_info JSONB,
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS wishlist (
 
 -- Create indexes
 CREATE INDEX IF NOT EXISTS idx_products_sku ON products(sku);
-CREATE INDEX IF NOT EXISTS idx_products_in_stock ON products(in_stock);
+CREATE INDEX IF NOT EXISTS idx_products_inStock ON products(inStock);
 CREATE INDEX IF NOT EXISTS idx_products_created_at ON products(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);

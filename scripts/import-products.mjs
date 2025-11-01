@@ -60,8 +60,8 @@ const products = [
         image: '/images/products/accessory-rocking-system-1.jpg'
       }
     ],
-    similar_product_ids: [],
-    in_stock: true,
+    similarProductIds: [],
+    inStock: true,
     stock: 15,
     features: [
       { he: '3 מצבי גובה', en: '3 height positions', ru: '3 уровня высоты' },
